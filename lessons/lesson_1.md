@@ -189,7 +189,7 @@ which also has an empty new line in it
 
 You will commonly encounter multiline strings in so-called `doc-strings`, i.e. in-line code documentation:
 
-```
+```python
 def foo():
   """ foo is a recurring example function
   
