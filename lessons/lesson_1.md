@@ -6,6 +6,7 @@ This lesson basically combines the following tutorials:
 
 * https://randomnerdtutorials.com/getting-started-thonny-micropython-python-ide-esp32-esp8266/
 * https://randomnerdtutorials.com/esp32-esp8266-micropython-web-server/
+* https://randomnerdtutorials.com/micropython-esp32-esp8266-access-point-ap/
 
 ## Introduction to Python
 
@@ -197,6 +198,53 @@ def foo():
   """
   pass
 ```
+
+## Adaption of the Code to have the ESP8266 as Access Point:
+
+The tutorial in https://randomnerdtutorials.com/esp32-esp8266-micropython-web-server/ connects the microcontroller to your local 
+wifi. That's in principle fine, but requires a local WIFI. However, the ESP8266 can also act as an access point. For this we
+follow the instructions given in https://randomnerdtutorials.com/micropython-esp32-esp8266-access-point-ap/ and replace the `boot.py`
+code from the first tuturial. The `main.py` file can stay as is.
+
+```python
+# boot.py
+# from https://randomnerdtutorials.com/micropython-esp32-esp8266-access-point-ap/
+# Complete project details at https://RandomNerdTutorials.com
+
+try:
+  import usocket as socket
+except:
+  import socket
+
+import network
+
+import esp
+esp.osdebug(None)
+
+import gc
+gc.collect()
+
+ssid = 'MicroPython-AP'
+password = '123456789'
+
+ap = network.WLAN(network.AP_IF)
+ap.active(True)
+ap.config(essid=ssid, password=password)
+
+while ap.active() == False:
+  pass
+
+print('Connection successful')
+print(ap.ifconfig())
+
+led = Pin(2, Pin.OUT)
+
+```
+
+In class, and to avoid conflicts we suggest to use the following to generate an `ssid`:
+
+1. Take your initials
+2. Append your full birth date
 
 
 ## Homework
