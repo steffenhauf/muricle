@@ -1,4 +1,3 @@
-# Complete project details at https://RandomNerdTutorials.com
 # Adapted from https://randomnerdtutorials.com/micropython-esp32-esp8266-access-point-ap/
 
 # it's nice to observe alphabetical order here
