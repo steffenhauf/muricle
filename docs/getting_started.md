@@ -19,3 +19,10 @@ On MacOs you will likely once neeed to install the USB drivers to be able to fla
 here: https://cityos-air.readme.io/docs/1-mac-os-usb-drivers-for-nodemcu . On most Linux boxes, this should not
 be necessary.
 
+## Sensors, Displays and other hardware addons
+
+### The BMP180 Temperature and Air Pressure Sensor
+
+We are based in Hamburg, and there the weather is sometimes quite nasty. Hence, it's useful to get an early warning on
+a decrease in airpressue. The BMP180 can do that for us. It can nicely integrate on the ESP8266 via micropython and the
+following library: https://github.com/micropython-IMU/micropython-bmp180
