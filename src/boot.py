@@ -7,11 +7,11 @@ import gc
 import network
 import time
 try:
-  import usocket as socket
-  print("Using usocket")
+    import usocket as socket
+    print("Using usocket")
 except:
-  import socket
-  print("Using socket")
+    import socket
+    print("Using socket")
 
 
 # explicitely run gc to free memory
@@ -27,7 +27,7 @@ ap.config(essid=ssid, password=password)
 
 # wait til the access point comes up
 while not ap.active():
-  time.sleep_ms(100)
+    time.sleep_ms(100)
 
 print('Connection successful')
 print(ap.ifconfig())
