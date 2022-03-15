@@ -107,14 +107,14 @@ We've learned a few built-in types in the process: Integers, Floats, Strings, Tu
 quite obvious. Tuples and lists are sequence containers, the difference being that a tuple is immutable, i.e. once defined you cannot
 alter it's length or members, which a list is mutable:
 
-```
+```python
 b = ["Hello"]
 b.append("World")
 b[0] = "Hi"
 ```
 has created `b := ["Hi", "World"]`. Finally, a dictionary is a key-value container:
 
-```
+```python
 c = {"Hello": 1, "World": 2}
 c[2.0] = 42  # extends c by adding 42 under key 2.0
 c["Hello"]  # will return 1
@@ -160,7 +160,7 @@ Here we iterate over the sequence if `i`s returned by the `range` generator, a `
 
 Finally, `if` constructs allow for conditional program flow:
 
-```
+```python
 if something() == True:  # or if something()
    # 1 ...
 elif a == "Foo":
