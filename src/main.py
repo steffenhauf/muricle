@@ -1,11 +1,23 @@
 # Based on https://randomnerdtutorials.com/esp32-esp8266-micropython-web-server/
+import esp
+import gc
+from machine import Pin
+import network
+import time
+try:
+    import usocket as socket
+    print("Using usocket")
+except:
+    import socket
+    print("Using socket")
+    
 
 def render_page():
     """
     This function is called to render the webserver page
     """
     # we can define variable on outside scope in a conditional experession
-    if led.value() == 1:
+    if led.value() == 0:
         gpio_state = "ON"
     else:
         gpio_state = "OFF"
@@ -71,6 +83,8 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', 80))
 s.listen(5)
 
+print("Bound to port 80")
+
 while True:
     # wait on a new connection
     conn, addr = s.accept()
@@ -83,15 +97,16 @@ while True:
     print(f"Request = {request}")
     
     # check if either led on or off was requested
-    led_on = '/?led=on' in request
-    led_off = '/?led=off' in request
+    led_on = 'GET /?led=on' in request
+    led_off = 'GET /?led=off' in request
     
+    # note that LED is on on low signal
     if led_on:
         print('LED ON')
-        led.value(1)
-    elif led_off:
-        print('LED OFF')
         led.value(0)
+    if led_off:
+        print('LED OFF')
+        led.value(1)
     
     response = render_page()
     conn.send('HTTP/1.1 200 OK\n')

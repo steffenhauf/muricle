@@ -3,6 +3,7 @@
 # it's nice to observe alphabetical order here
 import esp
 import gc
+from machine import Pin
 import network
 import time
 try:
@@ -31,5 +32,5 @@ while not ap.active():
 print('Connection successful')
 print(ap.ifconfig())
 
-# we will need the LED pin later for some bliking.
+# we will need the LED pin later for some blinking.
 led = Pin(2, Pin.OUT)
