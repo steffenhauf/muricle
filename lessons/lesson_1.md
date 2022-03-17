@@ -8,7 +8,7 @@ This lesson basically combines the following tutorials:
 * https://randomnerdtutorials.com/esp32-esp8266-micropython-web-server/
 * https://randomnerdtutorials.com/micropython-esp32-esp8266-access-point-ap/
 
-You can download the micropython firmware here: https://github.com/steffenhauf/muricle/blob/main/lessons/lesson_1.md
+You can download the micropython firmware here: https://micropython.org/download/#esp8266
 
 # Cloning this repo
 
