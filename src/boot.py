@@ -1,18 +1,11 @@
-# Adapted from https://randomnerdtutorials.com/micropython-esp32-esp8266-access-point-ap/
+# Adapted from
+# https://randomnerdtutorials.com/micropython-esp32-esp8266-access-point-ap/
 
 # it's nice to observe alphabetical order here
-import esp
 import gc
-from machine import Pin
-import network
 import time
-try:
-    import usocket as socket
-    print("Using usocket")
-except:
-    import socket
-    print("Using socket")
 
+import network
 
 # explicitely run gc to free memory
 gc.collect()
@@ -31,6 +24,3 @@ while not ap.active():
 
 print('Connection successful')
 print(ap.ifconfig())
-
-# we will need the LED pin later for some blinking.
-led = Pin(2, Pin.OUT)
