@@ -9,6 +9,7 @@ except ImportError:
 
     print("Using socket")
 
+from barometer import Barometer
 from blinker import Blinker
 
 
@@ -84,7 +85,7 @@ s.listen(5)
 
 print("Bound to port 80")
 
-sensors = [Blinker("Blinker", 2)]
+sensors = [Blinker("Blinker", 2), Barometer("Barometer", 5, 4),]
 
 while True:
     # wait on a new connection
