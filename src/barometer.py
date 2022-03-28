@@ -21,7 +21,7 @@ class Barometer(Sensor):
         self.temp = 0
         self.measure()
 
-    def measure(self):
+    async def measure(self):
         self.bmp180.blocking_read()
 
     def render(self):
