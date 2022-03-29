@@ -18,7 +18,7 @@ class AirQuality(Sensor):
         self.corrected_ppm = 0
         self.measure()
 
-    def measure(self):
+    async def measure(self):
         self.rzero = f"{self.mq135.get_rzero():0.2f}"
         self.corrected_rzero = f"{self.mq135.get_corrected_rzero(self.temperature, self.humidity):0.2f}"
         self.resistance = f"{self.mq135.get_resistance():0.2f}"

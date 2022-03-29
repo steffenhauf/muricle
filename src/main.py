@@ -1,5 +1,6 @@
 # Based on https://randomnerdtutorials.com/esp32-esp8266-micropython-web
 # -server/
+import uasyncio
 try:
     import usocket as socket
 
@@ -79,23 +80,16 @@ def render_page(sensors):
     return html
 
 
-# setup a socket to listen on port 80
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind(('', 80))
-s.listen(5)
 
-print("Bound to port 80")
 
 sensors = [Blinker("Blinker", 2), Barometer("Barometer", 5, 4),
            AirQuality("Air Quality", 0)]
 
-while True:
-    # wait on a new connection
-    conn, addr = s.accept()
-    # f-strings allow to include formatted vars into strings
-    print(f"Got a connection from {addr}")
+
+async def serve(reader, writer):
+
     # read some data
-    request = conn.recv(1024)
+    request = await reader.read(1024)
     # request is in bytes, we decode to a string
     request = request.decode()
     print(f"Request = {request}")
@@ -104,13 +98,27 @@ while True:
     measure = 'GET /?measure=on' in request
 
     # note that LED is on on low signal
+    measurements = []
     if measure:
         for sensor in sensors:
-            sensor.measure()
+            pass
+            measurements.append(sensor.measure())  # yields a future
+
+    # wait for measurements to actually finish
+    await uasyncio.gather(*measurements)
 
     response = render_page(sensors)
-    conn.send('HTTP/1.1 200 OK\n')
-    conn.send('Content-Type: text/html\n')
-    conn.send('Connection: close\n\n')
-    conn.sendall(response)
-    conn.close()
+    writer.write('HTTP/1.1 200 OK\n')
+    writer.write('Content-Type: text/html\n')
+    writer.write(response)
+    await writer.drain()
+    await writer.wait_closed()
+
+
+loop = uasyncio.get_event_loop()
+loop.create_task(uasyncio.start_server(serve, "0.0.0.0", 80))
+try: 
+    loop.run_forever()
+except KeyboardInterrupt:
+    print("closing")
+    loop.close()
