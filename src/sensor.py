@@ -8,3 +8,6 @@ class Sensor:
 
     def render(self):
         raise NotImplementedError()
+    
+    def get_values(self):
+        raise NotImplementedError()

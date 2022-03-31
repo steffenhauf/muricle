@@ -36,3 +36,9 @@ class Barometer(Sensor):
 
         """
         return html
+    
+    def get_values(self):
+        values = {"temp": self.bmp180.temperature,
+                  "pressure": self.bmp180.pressure/100,
+                  "altitude": self.bmp180.altitude}
+        return values
