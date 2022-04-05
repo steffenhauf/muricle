@@ -103,7 +103,7 @@ async def serve(reader, writer):
     measurements = []
     if measure:
         for sensor in sensors:
-            pass
+
             measurements.append(sensor.measure())  # yields a future
 
     # wait for measurements to actually finish
