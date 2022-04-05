@@ -19,8 +19,13 @@ ap.active(True)
 ap.config(essid=ssid, password=password)
 
 # wait til the access point comes up
-while not ap.active():
+max_attempts = 20
+while not ap.active() and max_attempts > 0:
     time.sleep_ms(100)
+    max_attempts -= 1
 
-print('Connection successful')
-print(ap.ifconfig())
+if max_attempts > 0:
+    print('Connection successful')
+    print(ap.ifconfig())
+else:
+    print("Coundn't connect to WIFI")

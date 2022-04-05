@@ -1,6 +1,8 @@
 # Based on https://randomnerdtutorials.com/esp32-esp8266-micropython-web
 # -server/
 import uasyncio
+from machine import Pin, I2C
+import ssd1306
 try:
     import usocket as socket
 
@@ -82,8 +84,8 @@ def render_page(sensors):
 
 
 
-sensors = [Blinker("Blinker", 2), Barometer("Barometer", 5, 4),
-           AirQuality("Air Quality", 0)]
+sensors = [Blinker("Blinker", 2), Barometer("Barometer", 5, 4)]#,
+           #AirQuality("Air Quality", 0)]
 
 
 async def serve(reader, writer):
@@ -101,7 +103,7 @@ async def serve(reader, writer):
     measurements = []
     if measure:
         for sensor in sensors:
-            pass
+
             measurements.append(sensor.measure())  # yields a future
 
     # wait for measurements to actually finish
@@ -115,8 +117,66 @@ async def serve(reader, writer):
     await writer.wait_closed()
 
 
+async def update_display():
+    i2c = I2C(sda=Pin(14), scl=Pin(12))
+    width = 128
+    display = ssd1306.SSD1306_I2C(width, 64, i2c)
+    
+    i = 0
+    row_height = 12
+    trendline_height = 3* row_height
+    trendline_base = 60
+    trendlines = {}
+    while True:
+        
+        
+        sensor = sensors[i]
+        values = sensor.get_values()
+        for key, value in values.items():
+            # first measure all sensors
+            for tsensor in sensors:
+                await tsensor.measure()
+                tvalues = tsensor.get_values()
+                s_trendline = trendlines.setdefault(sensor.name, {})
+                for tkey, tvalue in values.items():
+                    # add to and draw trendline
+                    p_trendline = s_trendline.setdefault(tkey, [])
+                    p_trendline.append(tvalue)
+                    # maximum width elements
+                    if len(p_trendline) >= width:
+                        del p_trendline[0]
+            # now update the display
+            display.fill(0)
+            display.text(sensor.name, 0, 0, 1)
+            display.text(f"{key}: {value:0.2f}", 0, row_height, 1)
+            
+            # add the trendline
+            trendline = trendlines[sensor.name][key]
+            minv = min(trendline)
+            maxv = max(trendline)
+            dv = abs(maxv - minv)
+            if dv > 0:
+                scaling = trendline_height/dv
+            else:
+                scaling = 1
+            #print(key, minv, maxv, scaling)
+            if len(trendline) > 1:
+                for c, val in enumerate(trendline[1:]):
+                    y0 = trendline_base-int((trendline[c-1]-minv)*scaling)
+                    y1 = trendline_base-int((val-minv)*scaling)
+                    display.line(c-1, y0, c, y1, 1)
+            
+            display.show()
+            await uasyncio.sleep(3)
+        i += 1
+        if i >= len(sensors):
+            i = 0
+        
+
+
 loop = uasyncio.get_event_loop()
 loop.create_task(uasyncio.start_server(serve, "0.0.0.0", 80))
+loop.create_task(update_display())
 try: 
     loop.run_forever()
 except KeyboardInterrupt:

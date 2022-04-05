@@ -35,3 +35,11 @@ class AirQuality(Sensor):
         <p>corr. ppm: <strong>""" + self.corrected_ppm + """</strong></p>
         """
         return html
+
+    def get_values(self):
+        values = {"r0": self.rzero,
+                  "corr. r0": self.corrected_rzero,
+                  "resistance": self.resistance,
+                  "ppm": self.ppm,
+                  "corr. ppm": self.corrected_ppm}
+        return values

@@ -31,3 +31,6 @@ class Blinker(Sensor):
         await uasyncio.sleep(self.blink_duration)
         # turns off the led
         self.led.value(1)
+        
+    def get_values(self):
+        return {"led": -1 * (self.led.value()-1)}
